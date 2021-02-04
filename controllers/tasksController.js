@@ -1,24 +1,38 @@
 const date = require('../getDate.js');
-const Task = require('../models/task');
+
+const mongoose = require('mongoose');
+const Task = mongoose.model('Task');
+//const Task = require('../models/taskFromFile');
+
 
 exports.getMainPage = (req, res)=> {
-    Task.fetchTasks(tasks => {
-        let today = {
-        date: date.getDate(),
-        weekday:  date.getWeekDay()
-        };
+    let today = date.getDate();
+    Task.find((error, tasks) => {
+        if(!error){
+            res.render('index.ejs', {date: today, toDoItems: tasks});
+        } else {
+            console.log('Failed to retrieve data.');
+        }
+    });
 
-        res.render('index.ejs', {date: today, toDoItems: tasks});
-    });  
+   
 };
 
 exports.postnewTask = (req, res) => {
-    let item = new Task(req.body.newTask);
-    item.saveTask();
-    res.redirect('/');
+    let item = req.body.newTask;//!!
+    let newTask = new Task();
+    newTask.description = item;
+
+    newTask.save((error, response) => {
+        if(!error){
+            res.redirect('/');
+        } else {
+            console.log("Failed to save data.");
+        }
+    })
 }
 
 exports.deleteTask = (req, res) => {
-    Task.deleteTask(req.body.checkbox);
+    
     res.redirect('/');
 }
