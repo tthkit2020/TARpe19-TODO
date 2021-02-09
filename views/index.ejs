@@ -8,15 +8,14 @@
 </head>
 <body>
     <div class="box" id="heading">
-        <h1><%= date.date %></h1>
-        <h1><%= date.weekday %></h1>
+        <h1><%= date %></h1>
     </div>
 
     <div class="box">
         <% for(let i = 0; i < toDoItems.length; i++) { %>
             <form action="/delete" method="POST">
                 <div class="item">
-                    <input name="checkbox" value="<%= toDoItems[i].description %>" type="checkbox" onchange="this.form.submit()">
+                    <input name="checkbox" value="<%= toDoItems[i].id %>" type="checkbox" onchange="this.form.submit()">
                     <p><%= toDoItems[i].description %></p>
                 </div>
             </form>

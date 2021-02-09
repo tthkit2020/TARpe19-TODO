@@ -7,6 +7,7 @@ const Task = mongoose.model('Task');
 
 exports.getMainPage = (req, res)=> {
     let today = date.getDate();
+
     Task.find((error, tasks) => {
         if(!error){
             res.render('index.ejs', {date: today, toDoItems: tasks});
@@ -14,8 +15,6 @@ exports.getMainPage = (req, res)=> {
             console.log('Failed to retrieve data.');
         }
     });
-
-   
 };
 
 exports.postnewTask = (req, res) => {
@@ -29,10 +28,17 @@ exports.postnewTask = (req, res) => {
         } else {
             console.log("Failed to save data.");
         }
-    })
+    });
 }
 
 exports.deleteTask = (req, res) => {
-    
-    res.redirect('/');
+    const checkedItemId = req.body.checkbox;
+
+    Task.findByIdAndRemove(checkedItemId, (error)=>{
+        if(!error){
+            res.redirect('/');
+        } else {
+            console.log("Failed to remove an item.");
+        }
+    });
 }
